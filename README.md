@@ -25,7 +25,7 @@ pip install s4ever
 
 ### Requirements
 
-- **Python**: 3.12 or later.
+- **Python**: 3.12 or later. *TileLang 0.1.15 does not work with Python 3.15* [(tilelang#3504)](https://github.com/tile-ai/tilelang/issues/3504), so on Python 3.15 the layers run without the fused kernels on NVIDIA/AMD GPUs.
 - **PyTorch**: `>= 2.13.0` on Linux, `>= 2.15.0` on macOS.
 - **NVIDIA GPUs (Linux)**: compute capability 8.0 or later (Ampere and newer). TileLang and the CUDA header packages install automatically on Linux; kernels compile with `nvcc` when a CUDA toolkit is present, or with NVRTC otherwise.
 - **AMD GPUs (Linux)**: ROCm (`hipcc`) on GPUs with float32 matrix instructions (CDNA). Other AMD GPUs fall back to PyTorch. *TileLang 0.1.15 does not work with PyTorch 2.15 on AMD* [(tilelang#3711)](https://github.com/tile-ai/tilelang/issues/3711)
@@ -53,7 +53,7 @@ optimizer = torch.optim.AdamW(param_groups(block), lr=0.01, weight_decay=0.01)
 - **Layout**: `s4ever` uses features-last tensors of shape `(B, L, d_model)`. The original repository uses `(B, d_model, L)`.
 - **Return value**: `S4`, `S4D`, and `S4Block` return `(y, state)`. `state` is `None` unless an initial state is passed or `output_final_state=True`.
 - **Optimizer groups**: `param_groups(model)` puts the SSM parameters (`dt`, `A`, `B`, and `P` in `S4`) into parameter groups with a learning rate of `0.001` and no weight decay, while leaving all other parameters on the optimizer's defaults.
-- **Full example**: [example.py](example.py) trains an `S4D` model on sequential CIFAR-10:
+- **Full example**: [example.py](https://github.com/jzluo/s4ever/blob/main/example.py) trains an `S4D` model on sequential CIFAR-10:
 
 ```bash
 uv run --with torchvision example.py
